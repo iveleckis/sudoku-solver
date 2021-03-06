@@ -1,16 +1,4 @@
-const board = [
-    [5, 3, 0, 0, 7, 0, 0, 0, 0],
-    [6, 0, 0, 1, 9, 5, 0, 0, 0],
-    [0, 9, 8, 0, 0, 0, 0, 6, 0],
-    [8, 0, 0, 0, 6, 0, 0, 0, 3],
-    [4, 0, 0, 8, 0, 3, 0, 0, 1],
-    [7, 0, 0, 0, 2, 0, 0, 0, 6],
-    [0, 6, 0, 0, 0, 0, 2, 8, 0],
-    [0, 0, 0, 4, 1, 9, 0, 0, 5],
-    [0, 0, 0, 0, 8, 0, 0, 7, 9],
-];
-
-const cube_1 = () => {
+const square_1 = () => {
     return [
         board[0][0],
         board[0][1],
@@ -24,7 +12,7 @@ const cube_1 = () => {
     ];
 };
 
-const cube_2 = () => {
+const square_2 = () => {
     return [
         board[0][3],
         board[0][4],
@@ -37,7 +25,7 @@ const cube_2 = () => {
         board[2][5],
     ];
 };
-const cube_3 = () => {
+const square_3 = () => {
     return [
         board[0][6],
         board[0][7],
@@ -53,7 +41,7 @@ const cube_3 = () => {
 
 /////////////////
 
-const cube_4 = () => {
+const square_4 = () => {
     return [
         board[3][0],
         board[3][1],
@@ -67,7 +55,7 @@ const cube_4 = () => {
     ];
 };
 
-const cube_5 = () => {
+const square_5 = () => {
     return [
         board[3][3],
         board[3][4],
@@ -80,7 +68,7 @@ const cube_5 = () => {
         board[5][5],
     ];
 };
-const cube_6 = () => {
+const square_6 = () => {
     return [
         board[3][6],
         board[3][7],
@@ -96,7 +84,7 @@ const cube_6 = () => {
 
 /////////////////
 
-const cube_7 = () => {
+const square_7 = () => {
     return [
         board[6][0],
         board[6][1],
@@ -110,7 +98,7 @@ const cube_7 = () => {
     ];
 };
 
-const cube_8 = () => {
+const square_8 = () => {
     return [
         board[6][3],
         board[6][4],
@@ -123,7 +111,7 @@ const cube_8 = () => {
         board[8][5],
     ];
 };
-const cube_9 = () => {
+const square_9 = () => {
     return [
         board[6][6],
         board[6][7],
@@ -136,37 +124,3 @@ const cube_9 = () => {
         board[8][8],
     ];
 };
-
-const solve = () => {
-    let board_for_solving = [...board];
-    for (let i in board) {
-        for (let j in board[i]) {
-            if (board_for_solving[i][j] === 0) {
-                for (let z = 1; z < 10; z++) {
-                    try_number(z, j, i);
-                }
-            }
-        }
-    }
-};
-
-const try_number = (number, x, y) => {
-    let valid = true;
-    console.log(number, x, y);
-    // checking x axis
-    if (board[y].includes(number)) {
-        valid = false;
-    }
-    for (let i in board) {
-        console.log(board[i][x]);
-        if (board[i][x] === number) {
-            valid = false;
-        }
-    }
-
-    console.log(valid);
-};
-
-//solve();
-
-try_number(9, 2, 1);
