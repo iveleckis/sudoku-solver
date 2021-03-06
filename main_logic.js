@@ -1,21 +1,28 @@
 let steps_taken_for_backtracking = [];
+let avoid;
 
 const loop_board = () => {
     for (let i in board_for_solving) {
+        let stop;
         for (let j in board_for_solving[i]) {
             if (board_for_solving[i][j] === 0) {
-                try_numbers(j, i);
+                const is_there_a_match = try_numbers(j, i);
+                if (is_there_a_match === 'no-match') {
+                    stop = true;
+                    break;
+                }
             }
         }
+        if (stop) break;
     }
 };
 
 const try_numbers = (x, y) => {
     let last_coordinates;
     let at_least_one_valid = false;
-
     for (let z = 1; z < 10; z++) {
         const is_valid = validate_number(z, x, y);
+        // we need to skip avoided value (z) if x and y matches avoid.x avoid.y
         if (is_valid) {
             last_coordinates = { x, y, value: z };
             at_least_one_valid = true;
@@ -27,11 +34,19 @@ const try_numbers = (x, y) => {
     }
     if (!at_least_one_valid) {
         step_back(last_coordinates);
+        return 'no-match';
     }
 };
 
 const step_back = () => {
-    console.log(steps_taken_for_backtracking);
+    const { x, y, value } = steps_taken_for_backtracking.pop();
+    board_for_solving[y][x] = 0;
+    dom_board.children[y].children[x].innerHTML = '';
+
+    const new_avoidance = { x, y, value };
+
+    avoid = new_avoidance;
+    console.log(avoid);
 };
 
 const validate_number = (number, x, y) => {
