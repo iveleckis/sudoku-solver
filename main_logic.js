@@ -1,7 +1,8 @@
-let steps_taken_for_backtracking = [];
-let avoid;
+let steps_taken = [];
+let avoid = [];
 
 const loop_board = () => {
+    console.log(board_for_solving);
     for (let i in board_for_solving) {
         let stop;
         for (let j in board_for_solving[i]) {
@@ -13,45 +14,75 @@ const loop_board = () => {
                 }
             }
         }
-        if (stop) break;
+        if (stop) {
+            break;
+        }
     }
 };
 
 const try_numbers = (x, y) => {
     let last_coordinates;
     let at_least_one_valid = false;
+
     for (let z = 1; z < 10; z++) {
         const is_valid = validate_number(z, x, y);
-        // we need to skip avoided value (z) if x and y matches avoid.x avoid.y
-        if (is_valid) {
+
+        const is_in_avoided_list = avoid.find(
+            (item) => item.x === x && item.y === y && item.value === z
+        );
+
+        if (is_valid && !is_in_avoided_list) {
             last_coordinates = { x, y, value: z };
             at_least_one_valid = true;
             dom_board.children[y].children[x].innerHTML = z;
             board_for_solving[y][x] = z;
-            steps_taken_for_backtracking.push(last_coordinates);
+            steps_taken.push(last_coordinates);
             break;
         }
     }
     if (!at_least_one_valid) {
-        step_back(last_coordinates);
+        step_back();
         return 'no-match';
     }
 };
 
 const step_back = () => {
-    const { x, y, value } = steps_taken_for_backtracking.pop();
-    board_for_solving[y][x] = 0;
-    dom_board.children[y].children[x].innerHTML = '';
+    // remove last step
+    // if step isnt avoided already
+    // add last step to be avoided
+    // if step is already avoided remove one more step
+    // and remove any further avoidance
 
-    const new_avoidance = { x, y, value };
+    const last_step_taken = steps_taken[steps_taken.length - 1];
 
-    avoid = new_avoidance;
-    console.log(avoid);
+    const { x, y } = steps_taken.pop();
+
+    if (
+        !avoid.find(
+            (item) =>
+                item.x === last_step_taken.x && item.y === last_step_taken.y
+        )
+    ) {
+        avoid.push(last_step_taken);
+        board_for_solving[y][x] = 0;
+        dom_board.children[y].children[x].innerHTML = '';
+    } else {
+        const another = steps_taken.pop();
+        avoid.push(another);
+
+        avoid = avoid.filter(
+            (item) =>
+                item.x !== another.x ||
+                item.y !== another.y ||
+                (item.x === another.x &&
+                    item.y === another.y &&
+                    item.value === another.value)
+        );
+    }
 };
 
 const validate_number = (number, x, y) => {
     // checking x axis
-
     if (board_for_solving[y].includes(number)) {
         return false;
     }
