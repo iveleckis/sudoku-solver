@@ -2,7 +2,6 @@ let steps_taken = [];
 let avoid = [];
 
 const loop_board = () => {
-    console.log(board_for_solving);
     for (let i in board_for_solving) {
         let stop;
         for (let j in board_for_solving[i]) {
@@ -21,22 +20,32 @@ const loop_board = () => {
 };
 
 const try_numbers = (x, y) => {
-    let last_coordinates;
     let at_least_one_valid = false;
 
     for (let z = 1; z < 10; z++) {
         const is_valid = validate_number(z, x, y);
 
-        const is_in_avoided_list = avoid.find(
-            (item) => item.x === x && item.y === y && item.value === z
-        );
+        const what_im_looking_for = { x, y, value: z };
+        let is_avoided;
 
-        if (is_valid && !is_in_avoided_list) {
-            last_coordinates = { x, y, value: z };
+        for (let i in avoid) {
+            if (
+                avoid[i].x === what_im_looking_for.x &&
+                avoid[i].y === what_im_looking_for.y &&
+                avoid[i].value === what_im_looking_for.value
+            ) {
+                is_avoided = true;
+                break;
+            }
+        }
+
+        console.log(is_avoided);
+
+        if (is_valid && !is_avoided) {
             at_least_one_valid = true;
             dom_board.children[y].children[x].innerHTML = z;
             board_for_solving[y][x] = z;
-            steps_taken.push(last_coordinates);
+            steps_taken.push({ x, y, value: z });
             break;
         }
     }
@@ -47,38 +56,26 @@ const try_numbers = (x, y) => {
 };
 
 const step_back = () => {
-    // remove last step
-    // if step isnt avoided already
-    // add last step to be avoided
-    // if step is already avoided remove one more step
-    // and remove any further avoidance
+    // determine last step
+    const last_step = steps_taken[steps_taken.length - 1];
+    // remove last step from step list
+    steps_taken.pop();
+    // remove last digit from dom board
+    dom_board.children[last_step.y].children[last_step.x].innerHTML = '';
+    // change last digit in board to 0
+    board_for_solving[last_step.y][last_step.x] = 0;
+    // determine second last step
+    const second_last_step = steps_taken[steps_taken.length - 1];
+    board_for_solving[second_last_step.y][second_last_step.x] = 0;
+    dom_board.children[second_last_step.y].children[
+        second_last_step.x
+    ].innerHTML = '';
 
-    const last_step_taken = steps_taken[steps_taken.length - 1];
-
-    const { x, y } = steps_taken.pop();
-
-    if (
-        !avoid.find(
-            (item) =>
-                item.x === last_step_taken.x && item.y === last_step_taken.y
-        )
-    ) {
-        avoid.push(last_step_taken);
-        board_for_solving[y][x] = 0;
-        dom_board.children[y].children[x].innerHTML = '';
-    } else {
-        const another = steps_taken.pop();
-        avoid.push(another);
-
-        avoid = avoid.filter(
-            (item) =>
-                item.x !== another.x ||
-                item.y !== another.y ||
-                (item.x === another.x &&
-                    item.y === another.y &&
-                    item.value === another.value)
-        );
+    // include last last digit into avoided list
+    if (!avoid.includes(second_last_step)) {
+        avoid.push(second_last_step);
     }
+    // loop again
 };
 
 const validate_number = (number, x, y) => {
@@ -92,7 +89,7 @@ const validate_number = (number, x, y) => {
             return false;
         }
     }
-    // square
+    // squares
     if (x <= 2) {
         if (y <= 2) {
             return !square_1().includes(number);
