@@ -1,6 +1,5 @@
 let steps_taken = [];
 let avoid = [];
-let count = 0;
 
 const loop_board = () => {
     for (let i in board_for_solving) {
@@ -65,31 +64,44 @@ const step_back = () => {
     dom_board.children[last_step.y].children[last_step.x].innerHTML = '';
     // change last digit in board to 0
     board_for_solving[last_step.y][last_step.x] = 0;
+    avoid.push(last_step);
 
     // determine second last step
     const second_last_step = steps_taken[steps_taken.length - 1];
     // remove last step from step list
-    steps_taken.pop();
-    // remove second last digit from dom board
-    dom_board.children[second_last_step.y].children[
-        second_last_step.x
-    ].innerHTML = '';
-    // change second last digit in board to 0
-    board_for_solving[second_last_step.y][second_last_step.x] = 0;
-
-    // include second last last digit into avoided list
-    avoid.push(second_last_step);
-
+    if (second_last_step) {
+        steps_taken.pop();
+        // remove second last digit from dom board
+        dom_board.children[second_last_step.y].children[
+            second_last_step.x
+        ].innerHTML = '';
+        // change second last digit in board to 0
+        board_for_solving[second_last_step.y][second_last_step.x] = 0;
+        // include second last last digit into avoided list
+        avoid.push(second_last_step);
+    }
     // remove any further avoidance any higher y and any higher x if y === y
-    avoid = avoid.filter(
-        (item) => item.x <= second_last_step.x && item.y <= second_last_step.y
-    );
-
-    if (count < 1000) {
-        // loop again
-        loop_board();
+    if (second_last_step) {
+        avoid = avoid.filter((item) => {
+            if (
+                item &&
+                (item.y < second_last_step.y ||
+                    (item.y === second_last_step.y &&
+                        item.x <= second_last_step.x))
+            ) {
+                return item;
+            }
+        });
     } else {
-        console.log('nope');
+        avoid = avoid.filter((item) => {
+            if (
+                item &&
+                (item.y < last_step.y ||
+                    (item.y === last_step.y && item.x <= last_step.x))
+            ) {
+                return item;
+            }
+        });
     }
     console.log(avoid);
 };
