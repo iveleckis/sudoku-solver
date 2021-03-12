@@ -1,5 +1,6 @@
 let steps_taken = [];
 let avoid = [];
+let count = 0;
 
 const loop_board = () => {
     for (let i in board_for_solving) {
@@ -53,8 +54,6 @@ const try_numbers = (x, y) => {
     }
 };
 
-// lets try comparing value strings instead of separate values
-
 const step_back = () => {
     // determine last step
     const last_step = steps_taken[steps_taken.length - 1];
@@ -64,6 +63,7 @@ const step_back = () => {
     dom_board.children[last_step.y].children[last_step.x].innerHTML = '';
     // change last digit in board to 0
     board_for_solving[last_step.y][last_step.x] = 0;
+    // avoid that step
     avoid.push(last_step);
 
     // determine second last step
@@ -103,7 +103,11 @@ const step_back = () => {
             }
         });
     }
-    console.log(avoid);
+
+    count++;
+    if (count < 200) {
+        loop_board();
+    }
 };
 
 const validate_number = (number, x, y) => {
@@ -153,3 +157,5 @@ const validate_number = (number, x, y) => {
     }
     return true;
 };
+
+const remove_further_avoidance = () => {};
