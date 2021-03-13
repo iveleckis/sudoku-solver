@@ -1,21 +1,27 @@
 let steps_taken = [];
 let avoid = [];
-let count = 0;
 
 const loop_board = () => {
-    for (let i in board_for_solving) {
+    let solved = false;
+    while (!solved) {
         let stop;
-        for (let j in board_for_solving[i]) {
-            if (board_for_solving[i][j] === 0) {
-                const is_there_a_match = try_numbers(j, i);
-                if (is_there_a_match === 'no-match') {
-                    stop = true;
-                    break;
+        for (let i in board_for_solving) {
+            for (let j in board_for_solving[i]) {
+                if (board_for_solving[i][j] === 0) {
+                    const is_there_a_match = try_numbers(j, i);
+                    if (is_there_a_match === 'no-match') {
+                        stop = true;
+                        break;
+                    }
                 }
             }
+            if (stop) {
+                break;
+            }
         }
-        if (stop) {
-            break;
+        if (!stop) {
+            solved = true;
+            console.log('solved!');
         }
     }
 };
@@ -51,62 +57,6 @@ const try_numbers = (x, y) => {
     if (!at_least_one_valid) {
         step_back();
         return 'no-match';
-    }
-};
-
-const step_back = () => {
-    // determine last step
-    const last_step = steps_taken[steps_taken.length - 1];
-    // remove last step from step list
-    steps_taken.pop();
-    // remove last digit from dom board
-    dom_board.children[last_step.y].children[last_step.x].innerHTML = '';
-    // change last digit in board to 0
-    board_for_solving[last_step.y][last_step.x] = 0;
-    // avoid that step
-    avoid.push(last_step);
-
-    // determine second last step
-    const second_last_step = steps_taken[steps_taken.length - 1];
-    // remove last step from step list
-    if (second_last_step) {
-        steps_taken.pop();
-        // remove second last digit from dom board
-        dom_board.children[second_last_step.y].children[
-            second_last_step.x
-        ].innerHTML = '';
-        // change second last digit in board to 0
-        board_for_solving[second_last_step.y][second_last_step.x] = 0;
-        // include second last last digit into avoided list
-        avoid.push(second_last_step);
-    }
-    // remove any further avoidance any higher y and any higher x if y === y
-    if (second_last_step) {
-        avoid = avoid.filter((item) => {
-            if (
-                item &&
-                (item.y < second_last_step.y ||
-                    (item.y === second_last_step.y &&
-                        item.x <= second_last_step.x))
-            ) {
-                return item;
-            }
-        });
-    } else {
-        avoid = avoid.filter((item) => {
-            if (
-                item &&
-                (item.y < last_step.y ||
-                    (item.y === last_step.y && item.x <= last_step.x))
-            ) {
-                return item;
-            }
-        });
-    }
-
-    count++;
-    if (count < 200) {
-        loop_board();
     }
 };
 
@@ -158,4 +108,24 @@ const validate_number = (number, x, y) => {
     return true;
 };
 
-const remove_further_avoidance = () => {};
+const step_back = () => {
+    const last_step = steps_taken[steps_taken.length - 1];
+
+    steps_taken.pop();
+
+    dom_board.children[last_step.y].children[last_step.x].innerHTML = '';
+
+    board_for_solving[last_step.y][last_step.x] = 0;
+
+    avoid.push(last_step);
+
+    avoid = avoid.filter((item) => {
+        if (
+            item &&
+            (item.y < last_step.y ||
+                (item.y === last_step.y && item.x <= last_step.x))
+        ) {
+            return item;
+        }
+    });
+};
