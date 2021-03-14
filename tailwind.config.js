@@ -1,4 +1,4 @@
-const colors = require('tailwindcss/colors')
+const colors = require('tailwindcss/colors');
 
 module.exports = {
     purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
@@ -768,6 +768,7 @@ module.exports = {
             'focus-within',
             'hover',
             'focus',
+            'disabled',
         ],
         backgroundImage: ['responsive'],
         backgroundOpacity: [
@@ -899,6 +900,7 @@ module.exports = {
             'focus-within',
             'hover',
             'focus',
+            'disabled',
         ],
         textDecoration: [
             'responsive',

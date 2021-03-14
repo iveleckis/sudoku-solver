@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { loop_board } from '../helpers/number_validation';
+import { loop_board } from '../helpers/mainLogic';
+import { validate_board } from '../helpers/validateBoard';
+import Solved from './Solved';
 
 const setup_initial_values = () => {
     let initial_values = {};
@@ -14,6 +16,8 @@ const setup_initial_values = () => {
 
 const SudokuCreateForm = () => {
     const [formValues, setFormValues] = useState(() => setup_initial_values());
+    const [solvedBoard, setSolvedBoard] = useState();
+    const [buttonDisabled, setButtonDisabled] = useState(true);
 
     const handle_change = (e) => {
         const { id, value } = e.target;
@@ -26,6 +30,11 @@ const SudokuCreateForm = () => {
                 [cel_index]: Number(value),
             },
         };
+        const form_values_in_array = generate_board(new_form_values);
+        const is_valid = validate_board(form_values_in_array);
+
+        is_valid ? setButtonDisabled(false) : setButtonDisabled(true);
+
         setFormValues(new_form_values);
     };
 
@@ -33,7 +42,7 @@ const SudokuCreateForm = () => {
         e.preventDefault();
         const board_for_solving = generate_board(formValues);
         const solved_board = solve(board_for_solving);
-        console.log(solved_board);
+        setSolvedBoard(solved_board);
     };
 
     const generate_board = (values) => {
@@ -50,52 +59,72 @@ const SudokuCreateForm = () => {
     };
 
     const solve = (board_for_solving) => {
-        loop_board(board_for_solving);
+        const solved_board = loop_board(board_for_solving);
+        return solved_board;
     };
 
     return (
-        <form
-            onChange={(e) => handle_change(e)}
-            onSubmit={(e) => handle_submit(e)}
-        >
-            <div className='border-2 border-black shadow-md'>
-                {Object.keys(formValues).map((row) => {
-                    return (
-                        <div
-                            className={`flex ${
-                                (row === '3' || row === '6') &&
-                                'border-b-2 border-black'
-                            }`}
-                            key={row + 'row'}
-                        >
-                            {Object.keys(formValues[row]).map((cel, i) => {
-                                const id = `${row}${Number(i) + 1}`;
+        <>
+            {solvedBoard ? (
+                <Solved solved_array={solvedBoard} />
+            ) : (
+                <div className='bg-white p-8 rounded-sm shadow-md'>
+                    <div className='text-3xl flex justify-center pb-2'>
+                        FILL BOARD WITH VALUES
+                    </div>
+                    <form
+                        onChange={(e) => handle_change(e)}
+                        onSubmit={(e) => handle_submit(e)}
+                    >
+                        <div className='border-2 border-black shadow-md'>
+                            {Object.keys(formValues).map((row) => {
                                 return (
-                                    <input
-                                        key={id}
-                                        className={`w-10 h-10 flex p-3 text-center border border-black ${
-                                            (Number(i) + 1 === 3 ||
-                                                Number(i) + 1 === 6) &&
-                                            'border-r-2 border-black'
+                                    <div
+                                        className={`flex ${
+                                            (row === '3' || row === '6') &&
+                                            'border-b-2 border-black'
                                         }`}
-                                        min='1'
-                                        max='9'
-                                        type='number'
-                                        id={id}
-                                    />
+                                        key={row + 'row'}
+                                    >
+                                        {Object.keys(formValues[row]).map(
+                                            (cel, i) => {
+                                                const id = `${row}${
+                                                    Number(i) + 1
+                                                }`;
+                                                return (
+                                                    <input
+                                                        key={id}
+                                                        className={`w-10 h-10 flex p-3 text-center border border-black ${
+                                                            (Number(i) + 1 ===
+                                                                3 ||
+                                                                Number(i) +
+                                                                    1 ===
+                                                                    6) &&
+                                                            'border-r-2 border-black'
+                                                        }`}
+                                                        min='1'
+                                                        max='9'
+                                                        type='number'
+                                                        id={id}
+                                                    />
+                                                );
+                                            }
+                                        )}
+                                    </div>
                                 );
                             })}
                         </div>
-                    );
-                })}
-            </div>
-            <button
-                className='w-full p-2 mt-2 border border-gray-600 shadow-md rounded-sm'
-                type='submit'
-            >
-                SOLVE!
-            </button>
-        </form>
+                        <button
+                            className='w-full p-2 mt-2 border border-gray-400 shadow-md rounded-sm bg-white hover:bg-gray-100 hover:shadow-lg disabled:text-gray-300'
+                            type='submit'
+                            disabled={buttonDisabled}
+                        >
+                            SOLVE!
+                        </button>
+                    </form>
+                </div>
+            )}
+        </>
     );
 };
 

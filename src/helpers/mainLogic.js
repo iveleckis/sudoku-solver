@@ -221,6 +221,7 @@ export const loop_board = (board_for_solving) => {
             } else return null;
         });
     };
+
     let solved = false;
     while (!solved) {
         let stop;
@@ -240,7 +241,6 @@ export const loop_board = (board_for_solving) => {
         }
         if (!stop) {
             solved = true;
-            console.log(board_for_solving);
             return board_for_solving;
         }
     }

@@ -11,6 +11,7 @@ html {
     display: flex;
     justify-content: center;
     align-items: center;
+    background: rgb(235, 235, 235);
 }
 
 /* Chrome, Safari, Edge, Opera */
