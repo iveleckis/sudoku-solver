@@ -1,6 +1,6 @@
 # Demo
 
-https://iveleckis.github.io/sudoku-solver/#/
+https://iveleckis.github.io/sudoku-solver/
 
 # Preview
 
