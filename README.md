@@ -1,3 +1,7 @@
+# Demo
+
+https://iveleckis.github.io/sudoku-solver/#/
+
 # Preview
 
 Video preview: 
