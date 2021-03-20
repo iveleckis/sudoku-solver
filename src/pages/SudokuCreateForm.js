@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { loop_board } from '../helpers/mainLogic';
 import { validate_board } from '../helpers/validateBoard';
 import Solved from './Solved';
@@ -18,6 +18,8 @@ const SudokuCreateForm = () => {
     const [formValues, setFormValues] = useState(() => setup_initial_values());
     const [solvedBoard, setSolvedBoard] = useState();
     const [buttonDisabled, setButtonDisabled] = useState(true);
+
+    const formContainerRef = useRef(null);
 
     const handle_change = (e) => {
         const { id, value } = e.target;
@@ -63,10 +65,24 @@ const SudokuCreateForm = () => {
         return solved_board;
     };
 
+    const handle_styling = (value, id_to_style) => {
+        const item_changing =
+            formContainerRef.current.children[id_to_style.split('')[0] - 1]
+                .children[id_to_style.split('')[1] - 1];
+        if (value > 0) {
+            item_changing.classList.add('bg-gray-200');
+        } else {
+            item_changing.classList.remove('bg-gray-200');
+        }
+    };
+
     return (
         <>
             {solvedBoard ? (
-                <Solved solved_array={solvedBoard} />
+                <Solved
+                    solved_array={solvedBoard}
+                    initial_values={formValues}
+                />
             ) : (
                 <div className='bg-white p-8 rounded-sm shadow-md'>
                     <div className='text-3xl flex justify-center pb-2'>
@@ -76,7 +92,10 @@ const SudokuCreateForm = () => {
                         onChange={(e) => handle_change(e)}
                         onSubmit={(e) => handle_submit(e)}
                     >
-                        <div className='border-2 border-black shadow-md'>
+                        <div
+                            ref={formContainerRef}
+                            className='border-2 border-black shadow-md'
+                        >
                             {Object.keys(formValues).map((row) => {
                                 return (
                                     <div
@@ -102,6 +121,12 @@ const SudokuCreateForm = () => {
                                                                     6) &&
                                                             'border-r-2 border-black'
                                                         }`}
+                                                        onChange={(e) =>
+                                                            handle_styling(
+                                                                e.target.value,
+                                                                e.target.id
+                                                            )
+                                                        }
                                                         min='1'
                                                         max='9'
                                                         type='number'
