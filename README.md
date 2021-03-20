@@ -5,7 +5,7 @@ https://iveleckis.github.io/sudoku-solver/
 # Preview
 
 Video preview: 
-https://user-images.githubusercontent.com/65958069/111083198-f1f2e680-8514-11eb-8238-e8e5ae8357bf.mp4
+https://user-images.githubusercontent.com/65958069/111883555-bcdb0e00-89c4-11eb-9923-c42f7a9d23d1.mp4
 
 
 
