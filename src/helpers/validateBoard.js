@@ -1,5 +1,5 @@
-export const validate_board = (board) => {
-    const square_1 = () => {
+export const validateBoard = (board) => {
+    const square1 = () => {
         return [
             board[0][0],
             board[0][1],
@@ -13,7 +13,7 @@ export const validate_board = (board) => {
         ];
     };
 
-    const square_2 = () => {
+    const square2 = () => {
         return [
             board[0][3],
             board[0][4],
@@ -26,7 +26,7 @@ export const validate_board = (board) => {
             board[2][5],
         ];
     };
-    const square_3 = () => {
+    const square3 = () => {
         return [
             board[0][6],
             board[0][7],
@@ -40,7 +40,7 @@ export const validate_board = (board) => {
         ];
     };
 
-    const square_4 = () => {
+    const square4 = () => {
         return [
             board[3][0],
             board[3][1],
@@ -54,7 +54,7 @@ export const validate_board = (board) => {
         ];
     };
 
-    const square_5 = () => {
+    const square5 = () => {
         return [
             board[3][3],
             board[3][4],
@@ -67,7 +67,7 @@ export const validate_board = (board) => {
             board[5][5],
         ];
     };
-    const square_6 = () => {
+    const square6 = () => {
         return [
             board[3][6],
             board[3][7],
@@ -81,7 +81,7 @@ export const validate_board = (board) => {
         ];
     };
 
-    const square_7 = () => {
+    const square7 = () => {
         return [
             board[6][0],
             board[6][1],
@@ -95,7 +95,7 @@ export const validate_board = (board) => {
         ];
     };
 
-    const square_8 = () => {
+    const square8 = () => {
         return [
             board[6][3],
             board[6][4],
@@ -108,7 +108,7 @@ export const validate_board = (board) => {
             board[8][5],
         ];
     };
-    const square_9 = () => {
+    const square9 = () => {
         return [
             board[6][6],
             board[6][7],
@@ -154,7 +154,7 @@ export const validate_board = (board) => {
 
     for (let i = 1; i < 10; i++) {
         if (i === 1) {
-            const square = square_1();
+            const square = square1();
             const duplicates = [];
             for (let j in square) {
                 if (square[j] !== 0) {
@@ -168,7 +168,7 @@ export const validate_board = (board) => {
         }
 
         if (i === 2) {
-            const square = square_2();
+            const square = square2();
             const duplicates = [];
             for (let j in square) {
                 if (square[j] !== 0) {
@@ -182,7 +182,7 @@ export const validate_board = (board) => {
         }
 
         if (i === 3) {
-            const square = square_3();
+            const square = square3();
             const duplicates = [];
             for (let j in square) {
                 if (square[j] !== 0) {
@@ -196,7 +196,7 @@ export const validate_board = (board) => {
         }
 
         if (i === 4) {
-            const square = square_4();
+            const square = square4();
             const duplicates = [];
             for (let j in square) {
                 if (square[j] !== 0) {
@@ -210,7 +210,7 @@ export const validate_board = (board) => {
         }
 
         if (i === 5) {
-            const square = square_5();
+            const square = square5();
             const duplicates = [];
             for (let j in square) {
                 if (square[j] !== 0) {
@@ -224,7 +224,7 @@ export const validate_board = (board) => {
         }
 
         if (i === 6) {
-            const square = square_6();
+            const square = square6();
             const duplicates = [];
             for (let j in square) {
                 if (square[j] !== 0) {
@@ -238,7 +238,7 @@ export const validate_board = (board) => {
         }
 
         if (i === 7) {
-            const square = square_7();
+            const square = square7();
             const duplicates = [];
             for (let j in square) {
                 if (square[j] !== 0) {
@@ -252,7 +252,7 @@ export const validate_board = (board) => {
         }
 
         if (i === 8) {
-            const square = square_8();
+            const square = square8();
             const duplicates = [];
             for (let j in square) {
                 if (square[j] !== 0) {
@@ -266,7 +266,7 @@ export const validate_board = (board) => {
         }
 
         if (i === 9) {
-            const square = square_9();
+            const square = square9();
             const duplicates = [];
             for (let j in square) {
                 if (square[j] !== 0) {

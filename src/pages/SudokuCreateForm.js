@@ -1,100 +1,100 @@
 import React, { useRef, useState } from 'react';
-import { loop_board } from '../helpers/mainLogic';
-import { validate_board } from '../helpers/validateBoard';
+import { loopBoard } from '../helpers/mainLogic';
+import { validateBoard } from '../helpers/validateBoard';
 import Solved from './Solved';
 
-const setup_initial_values = () => {
-    let initial_values = {};
+const setupInitialValues = () => {
+    let initialValues = {};
     for (let i = 1; i < 10; i++) {
-        initial_values[i] = {};
+        initialValues[i] = {};
         for (let j = 1; j < 10; j++) {
-            initial_values[i][j] = 0;
+            initialValues[i][j] = 0;
         }
     }
-    return initial_values;
+    return initialValues;
 };
 
 const SudokuCreateForm = () => {
-    const [formValues, setFormValues] = useState(() => setup_initial_values());
+    //const [visualize, setVisualize] = useState(false);
+
+    const [formValues, setFormValues] = useState(() => setupInitialValues());
     const [solvedBoard, setSolvedBoard] = useState();
     const [buttonDisabled, setButtonDisabled] = useState(true);
 
     const formContainerRef = useRef(null);
 
-    const handle_change = (e) => {
+    const handleChange = (e) => {
         const { id, value } = e.target;
-        const row_index = String(id).split('')[0];
-        const cel_index = String(id).split('')[1];
-        const new_form_values = {
+        const rowIndex = String(id).split('')[0];
+        const celIndex = String(id).split('')[1];
+        const newFormValues = {
             ...formValues,
-            [row_index]: {
-                ...formValues[row_index],
-                [cel_index]: Number(value),
+            [rowIndex]: {
+                ...formValues[rowIndex],
+                [celIndex]: Number(value),
             },
         };
-        const form_values_in_array = generate_board(new_form_values);
-        const is_valid = validate_board(form_values_in_array);
+        const formValuesInArray = generateBoard(newFormValues);
+        const isValid = validateBoard(formValuesInArray);
 
-        is_valid ? setButtonDisabled(false) : setButtonDisabled(true);
+        isValid ? setButtonDisabled(false) : setButtonDisabled(true);
 
-        setFormValues(new_form_values);
+        setFormValues(newFormValues);
     };
 
-    const handle_submit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        const board_for_solving = generate_board(formValues);
-        const solved_board = solve(board_for_solving);
-        setSolvedBoard(solved_board);
+        setButtonDisabled(true);
+        const boardForSolving = generateBoard(formValues);
+        const solvedBoard = solve(boardForSolving);
+        setSolvedBoard(solvedBoard);
     };
 
-    const generate_board = (values) => {
-        const generate_board = [];
+    const generateBoard = (values) => {
+        const generatedBoard = [];
         for (let y in Object.keys(values)) {
             const row = [];
-            const row_vals = Object.keys(values[Number(y) + 1]);
-            for (let x in row_vals) {
+            const rowVals = Object.keys(values[Number(y) + 1]);
+            for (let x in rowVals) {
                 row.push(values[Number(y) + 1][Number(x) + 1]);
             }
-            generate_board.push(row);
+            generatedBoard.push(row);
         }
-        return generate_board;
+        return generatedBoard;
     };
 
-    const solve = (board_for_solving) => {
-        const solved_board = loop_board(board_for_solving);
-        return solved_board;
+    const solve = (boardForSolving) => {
+        const solvedBoard = loopBoard(boardForSolving);
+        return solvedBoard;
     };
 
-    const handle_styling = (value, id_to_style) => {
-        const item_changing =
-            formContainerRef.current.children[id_to_style.split('')[0] - 1]
-                .children[id_to_style.split('')[1] - 1];
+    const handleStyling = (value, idToStyle) => {
+        const itemChanging =
+            formContainerRef.current.children[idToStyle.split('')[0] - 1]
+                .children[idToStyle.split('')[1] - 1];
         if (value > 0) {
-            item_changing.classList.add('bg-gray-200');
+            itemChanging.classList.add('bg-gray-200');
         } else {
-            item_changing.classList.remove('bg-gray-200');
+            itemChanging.classList.remove('bg-gray-200');
         }
     };
 
     return (
         <>
             {solvedBoard ? (
-                <Solved
-                    solved_array={solvedBoard}
-                    initial_values={formValues}
-                />
+                <Solved solvedArray={solvedBoard} initialValues={formValues} />
             ) : (
-                <div className='bg-white p-8 rounded-sm shadow-md'>
-                    <div className='text-3xl flex justify-center pb-2'>
+                <div className='bg-white p-10 rounded-sm shadow-md'>
+                    <div className='text-3xl flex justify-center pb-4'>
                         FILL BOARD WITH VALUES
                     </div>
                     <form
-                        onChange={(e) => handle_change(e)}
-                        onSubmit={(e) => handle_submit(e)}
+                        onChange={(e) => handleChange(e)}
+                        onSubmit={(e) => handleSubmit(e)}
                     >
                         <div
                             ref={formContainerRef}
-                            className='border-2 border-black shadow-md'
+                            className='border-2 mb-2 border-black shadow-md'
                         >
                             {Object.keys(formValues).map((row) => {
                                 return (
@@ -122,7 +122,7 @@ const SudokuCreateForm = () => {
                                                             'border-r-2 border-black'
                                                         }`}
                                                         onChange={(e) =>
-                                                            handle_styling(
+                                                            handleStyling(
                                                                 e.target.value,
                                                                 e.target.id
                                                             )
@@ -139,8 +139,32 @@ const SudokuCreateForm = () => {
                                 );
                             })}
                         </div>
+                        {/* <div className='mb-2 text-xs text-gray-600 flex items-center'>
+                            <div
+                                onClick={() => setVisualize(!visualize)}
+                                className={`flex justify-center items-center transition cursor-pointer mr-1 w-4 h-4 border border-gray-600 rounded ${
+                                    visualize ? 'bg-indigo-700' : ''
+                                }`}
+                            >
+                                <svg
+                                    xmlns='http://www.w3.org/2000/svg'
+                                    className='h-4 w-4 text-white'
+                                    fill='none'
+                                    viewBox='0 0 24 24'
+                                    stroke='currentColor'
+                                >
+                                    <path
+                                        strokeLinecap='round'
+                                        strokeLinejoin='round'
+                                        strokeWidth={2}
+                                        d='M5 13l4 4L19 7'
+                                    />
+                                </svg>
+                            </div>
+                            <label>VISUALIZE</label>
+                        </div> */}
                         <button
-                            className='w-full p-2 mt-2 border border-gray-400 shadow-md rounded-sm bg-white hover:bg-gray-100 hover:shadow-lg disabled:text-gray-300'
+                            className='w-full p-2 border border-gray-400 shadow-md rounded-sm bg-white hover:bg-gray-100 hover:shadow-lg disabled:text-gray-300'
                             type='submit'
                             disabled={buttonDisabled}
                         >
